@@ -56,9 +56,23 @@ class Program
     static Note? GetRootNoteFromUser()
     {
         Console.WriteLine("Available notes:");
-        Console.WriteLine(string.Join(", ", Note.GetAllNoteNames()));
+        var noteNames = Note.GetAllNoteNames();
+
+        // Display notes with numbers in columns
+        int columnWidth = 15;
+        int columns = 4;
+        for (int i = 0; i < noteNames.Length; i++)
+        {
+            string display = $"{i + 1}. {noteNames[i]}";
+            Console.Write($"  {display.PadRight(columnWidth)}");
+            if ((i + 1) % columns == 0)
+            {
+                Console.WriteLine();
+            }
+        }
         Console.WriteLine();
-        Console.Write("Enter the root note (or 'exit' to quit): ");
+        Console.WriteLine();
+        Console.Write("Enter note number or name (or 'exit' to quit): ");
 
         string? input = Console.ReadLine()?.Trim();
 
@@ -67,6 +81,13 @@ class Program
             return null;
         }
 
+        // Try to parse as number first
+        if (int.TryParse(input, out int noteNumber) && noteNumber >= 1 && noteNumber <= noteNames.Length)
+        {
+            return new Note(noteNames[noteNumber - 1]);
+        }
+
+        // Otherwise try as note name
         try
         {
             return new Note(input);
@@ -85,12 +106,13 @@ class Program
         Console.WriteLine("Available scales:");
         var scaleNames = Scale.GetAllScaleNames();
 
-        // Display in columns for better readability
-        int columnWidth = 20;
-        int columns = 3;
+        // Display scales with numbers in columns
+        int columnWidth = 25;
+        int columns = 2;
         for (int i = 0; i < scaleNames.Length; i++)
         {
-            Console.Write($"  {scaleNames[i].PadRight(columnWidth)}");
+            string display = $"{i + 1}. {scaleNames[i]}";
+            Console.Write($"  {display.PadRight(columnWidth)}");
             if ((i + 1) % columns == 0)
             {
                 Console.WriteLine();
@@ -99,7 +121,7 @@ class Program
         Console.WriteLine();
         Console.WriteLine();
 
-        Console.Write("Enter the scale name (or 'exit' to quit): ");
+        Console.Write("Enter scale number or name (or 'exit' to quit): ");
 
         string? input = Console.ReadLine()?.Trim();
 
@@ -108,6 +130,13 @@ class Program
             return null;
         }
 
+        // Try to parse as number first
+        if (int.TryParse(input, out int scaleNumber) && scaleNumber >= 1 && scaleNumber <= scaleNames.Length)
+        {
+            return new Scale(scaleNames[scaleNumber - 1]);
+        }
+
+        // Otherwise try as scale name
         try
         {
             return new Scale(input);
